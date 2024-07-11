@@ -44,7 +44,7 @@ public class FileHandler {
             dire.mkdirs();
         }
 
-        File output = new File(dire, file.getPath());
+        File output = new File(dire, file.getName());
         try (BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file)); BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(output))) {
             int data;
             byte[] buffer = new byte[16 * 1024];
@@ -63,7 +63,7 @@ public class FileHandler {
     public static void deleteFile(String filePath) {
         File file = new File(filePath);
         if (file.exists()) {
-            file.delete();
+          boolean z= file.delete();
         } else {
             throw new RuntimeException("File not found: " + filePath);
         }
@@ -86,7 +86,7 @@ public class FileHandler {
             dire.mkdirs();
         }
 
-        File output = new File(dire, file.getPath());
+        File output = new File(dire, file.getName());
         try (BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file)); BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(output))) {
             int data;
             byte[] buffer = new byte[16 * 1024];
@@ -94,7 +94,8 @@ public class FileHandler {
                 writer.write(buffer, 0, data);
                 writer.flush();
             }
-            file.delete();
+            boolean z=file.delete();
+            file.deleteOnExit();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -116,7 +117,6 @@ public class FileHandler {
 
     /**
      * This method allow you to create directory to destination
-     *
      * @param directoriesPath location of your directories
      *
      */
