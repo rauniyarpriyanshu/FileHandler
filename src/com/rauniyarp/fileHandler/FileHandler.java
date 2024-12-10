@@ -1,6 +1,8 @@
 package com.rauniyarp.fileHandler;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class FileHandler {
 
@@ -26,6 +28,7 @@ public class FileHandler {
         }
         return builder.toString();
     }
+
 
     /**
      * This method allow you to copy your file to destination
@@ -127,7 +130,56 @@ public class FileHandler {
         }
     }
 
-    /**This method allow you to delete directory completely
+    public static void fileEncryption(File file, String outputPath, String password) throws FileNotFoundException {
+
+        if (!file.exists()) {
+            throw new FileNotFoundException("Invalid file path!");
+        }
+        StringBuilder content = new StringBuilder();
+        try (BufferedInputStream reader = new BufferedInputStream(Files.newInputStream(file.toPath())); BufferedOutputStream writer = new BufferedOutputStream(Files.newOutputStream(Paths.get(outputPath)))) {
+            int data;
+            byte[] buffer = new byte[16 * 1024];
+            while ((data = reader.read(buffer)) != -1) {
+                content.append(new String(buffer, 0, data));
+            }
+            FileTextTransformation transformation = new FileTextTransformation();
+            String output = transformation.encrypt(content.toString(), password);
+
+            writer.write(output.getBytes());
+            writer.flush();
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
+    }
+
+    public static void fileDecryption(File file, String outputPath, String password) throws FileNotFoundException {
+
+        if (!file.exists()) {
+            throw new FileNotFoundException("Invalid file path!");
+        }
+        StringBuilder content = new StringBuilder();
+        try (BufferedInputStream reader = new BufferedInputStream(Files.newInputStream(file.toPath())); BufferedOutputStream writer = new BufferedOutputStream(Files.newOutputStream(Paths.get(outputPath)))) {
+            int data;
+            byte[] buffer = new byte[16 * 1024];
+            while ((data = reader.read(buffer)) != -1) {
+                content.append(new String(buffer, 0, data));
+            }
+            FileTextTransformation transformation = new FileTextTransformation();
+            String output = transformation.decrypt(content.toString(), password);
+
+            writer.write(output.getBytes());
+            writer.flush();
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
+    }
+
+    /**
+     * This method allow you to delete directory completely
     * */
     public static boolean deleteDirectory(File file){
         if (file.isDirectory()){
