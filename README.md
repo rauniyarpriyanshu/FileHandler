@@ -9,4 +9,6 @@
         FileHandler.moveFile("filePath", "your directoriesPath");
         FileHandler.deleteFile("fileName");
         FileHandler.deleteDirectory(new File("yourDirectory"));
+        FileHandler.fileEncryption(filePath,OutputPath,password);
+        FileHandler.filedecryption(filePath,OutputPath,password);
 ```
